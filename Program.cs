@@ -29,7 +29,7 @@ namespace RhythmsGonnaGetYou
         public int Id { get; set; }
         public string Title { get; set; }
         public string IsExplicit { get; set; }
-        public DateTime ReleaseDate { get; set; }
+        public string ReleaseDate { get; set; }
         public int BandId { get; set; }
 
         // This tells the Albums model that it can use the Bands property to return a Bands object.
@@ -45,7 +45,7 @@ namespace RhythmsGonnaGetYou
         public int Id { get; set; }
         public int TrackNumber { get; set; }
         public string Title { get; set; }
-        public TimeSpan Duration { get; set; }
+        public int Duration { get; set; }
         public int AlbumId { get; set; }
 
         // This tells the Songs model that it can use the Albums property to return a Albums object.
@@ -107,8 +107,8 @@ namespace RhythmsGonnaGetYou
         static void Main(string[] args)
         {
             var context = new RhythmsGonnaGetYouContext();
-            //Create a greeting/welcome for “SDG MUSIC DATABASE” 
 
+            //Create a greeting/welcome for “SDG MUSIC DATABASE” 
             Console.WriteLine();
             Console.WriteLine(new String('*', 34));
             Console.WriteLine("WELCOME TO THE SDG MUSIC DATABASE!");
@@ -125,7 +125,7 @@ namespace RhythmsGonnaGetYou
             {
                 // Make a simple menu screen
                 Console.WriteLine(new String('~', 90));
-                Console.WriteLine("What do you want to do? [V]iew Artists, [A]dd New Music Data, Artist [S]tatus, or [Q]uit ? ");
+                Console.WriteLine("What do you want to do? [V]iew Artists, [A]dd New Music Data, Artist [S]tatus, or [Q]uit? ");
                 Console.WriteLine(new String('~', 90));
                 var answer = Console.ReadLine().ToUpper();
                 Console.WriteLine();
@@ -136,20 +136,20 @@ namespace RhythmsGonnaGetYou
                 {
 
                     Console.WriteLine(new String('~', 114));
-                    Console.WriteLine("What do you want to do? View [A]ll Bands, [S]elect an Artist & View Their Discography, or View by [R]elease Date ? ");
+                    Console.WriteLine("What do you want to do? View [A]ll Bands, [S]elect an Artist & View Their Discography, or View by [R]elease Date? ");
                     Console.WriteLine(new String('~', 114));
                     var choice = Console.ReadLine().ToUpper();
                     Console.WriteLine();
 
+                    // IF VIEW ALL BANDS
                     if (choice == "A")
                     {
-                        // View all bands
                         var bands = context.Bands.Count();
                         Console.WriteLine(new String('-', 30));
                         Console.WriteLine($"There are {bands} in the database!");
                         Console.WriteLine(new String('-', 30));
 
-                        // To see all of the bands, we can use a foreach loop:
+                        // To see all of the bands in database
                         foreach (var band in context.Bands)
                         {
                             Console.WriteLine();
@@ -158,6 +158,8 @@ namespace RhythmsGonnaGetYou
                         }
                     }
 
+
+                    // To select a band and view their albums in database
                     // else if (choice == "S")
                     // {
                     //     Console.WriteLine();
@@ -165,13 +167,14 @@ namespace RhythmsGonnaGetYou
                     //     var selection = Console.ReadLine();
                     //     Console.WriteLine();
 
-                    //     if (selection == "")
+                    //     if (selection == "Band.Id")
                     //     {
 
                     //     }
 
                     // }
 
+                    // IF VIEW BY RELEASE DATE
                     else if (choice == "R")
                     {
                         var ReleaseDate = context.Albums.Include(album => album.Bands).OrderBy(album => album.ReleaseDate);
@@ -185,6 +188,64 @@ namespace RhythmsGonnaGetYou
 
                         }
                     }
+
+
+                }
+                // IF ADD
+                else if (answer == "A")
+                {
+                    Console.WriteLine(new String('~', 58));
+                    Console.WriteLine("What do you want add? A [N]ew Artist, [A]lbum, or [S]ong? ");
+                    Console.WriteLine(new String('~', 58));
+                    var choice = Console.ReadLine().ToUpper();
+                    Console.WriteLine();
+
+                    // IF ADD NEW BAND
+                    if (choice == "N")
+                    {
+                        var newBand = new Band();
+                        newBand.Id = PromptForInteger("What is the ID number of the new artist/band? ");
+                        newBand.Name = PromptForString("What is the name of the new artist/band? ");
+                        newBand.CountryOfOrigin = PromptForString("What is the artist/band's country of origin? ");
+                        newBand.NumberOfMembers = PromptForInteger("How many members does this artist/band have? ");
+                        newBand.Website = PromptForString("What is the artist/band's website? ");
+                        newBand.Style = PromptForString("What is the artist/band's genre? ");
+                        newBand.IsSigned = PromptForString("Are they signed? [Yes/No] ");
+                        newBand.ContactName = PromptForString("Who is the manager for this artist/band? ");
+                        newBand.ContactPhoneNumber = PromptForInteger("What their extention? [4 Digits] ");
+
+                        context.Bands.Add(newBand);
+                        context.SaveChanges();
+                    }
+
+
+                    else if (choice == "A")
+                    {
+                        var newAlbum = new Album();
+                        newAlbum.Id = PromptForInteger("What is the ID number of the new album? ");
+                        newAlbum.Title = PromptForString("What is the name of the new album? ");
+                        newAlbum.IsExplicit = PromptForString("Is the album explicit ? [Yes/No] ");
+                        newAlbum.ReleaseDate = PromptForString("When was the album released ? [MM/DD/YYY] ");
+                        newAlbum.BandId = PromptForInteger("What is the band ID of the new album? ");
+
+                        context.Albums.Add(newAlbum);
+                        context.SaveChanges();
+
+                    }
+
+                    else if (choice == "S")
+                    {
+                        var newSong = new Song();
+                        newSong.Id = PromptForInteger("What is the ID number of the new ? ");
+                        newSong.TrackNumber = PromptForInteger("What is the track number of the new song? ");
+                        newSong.Title = PromptForString("What is the name of the new song? ");
+                        newSong.Duration = PromptForInteger("What is the duration of the song? [Seconds] ");
+                        newSong.AlbumId = PromptForInteger("What is the album ID number? ");
+
+                        context.Songs.Add(newSong);
+                        context.SaveChanges();
+                    }
+
 
 
                 }
