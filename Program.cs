@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
 namespace RhythmsGonnaGetYou
 {
-    class Bands
+    class Band
     {
 
         // Accessing the list of Bands from our database from our C# code.
@@ -20,7 +21,7 @@ namespace RhythmsGonnaGetYou
 
     }
 
-    class Albums
+    class Album
     {
 
         // Accessing the list of Albums from our database from our C# code.
@@ -29,13 +30,14 @@ namespace RhythmsGonnaGetYou
         public string Title { get; set; }
         public string IsExplicit { get; set; }
         public DateTime ReleaseDate { get; set; }
+        public int BandId { get; set; }
 
         // This tells the Albums model that it can use the Bands property to return a Bands object.
-        public Bands Bands { get; set; }
+        public Band Bands { get; set; }
 
     }
 
-    class Songs
+    class Song
     {
 
         // Accessing the list of Songs from our database from our C# code.
@@ -47,7 +49,7 @@ namespace RhythmsGonnaGetYou
         public int AlbumId { get; set; }
 
         // This tells the Songs model that it can use the Albums property to return a Albums object.
-        public Albums Albums { get; set; }
+        public Album Albums { get; set; }
 
     }
 
@@ -55,9 +57,9 @@ namespace RhythmsGonnaGetYou
     class RhythmsGonnaGetYouContext : DbContext
     {
         // Define a Bands property that is a DbSet.
-        public DbSet<Bands> Bands { get; set; }
-        public DbSet<Albums> Albums { get; set; }
-        public DbSet<Songs> Songs { get; set; }
+        public DbSet<Band> Bands { get; set; }
+        public DbSet<Album> Albums { get; set; }
+        public DbSet<Song> Songs { get; set; }
 
         // Define a method required by EF that will configure our connection
         // to the database.
@@ -104,6 +106,7 @@ namespace RhythmsGonnaGetYou
         }
         static void Main(string[] args)
         {
+            var context = new RhythmsGonnaGetYouContext();
             //Create a greeting/welcome for “SDG MUSIC DATABASE” 
 
             Console.WriteLine();
@@ -112,24 +115,78 @@ namespace RhythmsGonnaGetYou
             Console.WriteLine(new String('*', 34));
             Console.WriteLine();
 
-            //Make a simple menu screen
-            Console.WriteLine();
-            Console.Write("What do you want to do? [V]iew Artists, [A]dd New Music Data, Artist [S]tatus, or [Q]uit ? ");
-            var answer = Console.ReadLine().ToUpper();
-            Console.WriteLine();
 
 
+            var whileRunning = true;
+
+            while (whileRunning)
 
 
-            var context = new RhythmsGonnaGetYouContext();
-
-
-            // To see all of the bands, we can use a foreach loop:
-            foreach (var band in context.Bands)
             {
-                Console.WriteLine($"There is a band named {band.Name} in the database!");
+                // Make a simple menu screen
+                Console.WriteLine();
+                Console.Write("What do you want to do? [V]iew Artists, [A]dd New Music Data, Artist [S]tatus, or [Q]uit ? ");
+                var answer = Console.ReadLine().ToUpper();
+                Console.WriteLine();
+
+
+
+                if (answer == "V")
+                {
+
+                    Console.WriteLine();
+                    Console.Write("What do you want to do? View [A]ll Bands, [S]elect A Band & View Their Album(s), or View by Release [D]ate ? ");
+                    var choice = Console.ReadLine().ToUpper();
+                    Console.WriteLine();
+
+                    if (choice == "A")
+                    {
+                        // View all bands
+                        var bands = context.Bands.Count();
+                        Console.WriteLine(new String('-', 30));
+                        Console.WriteLine($"There are {bands} in the database!");
+                        Console.WriteLine(new String('-', 30));
+
+                        // To see all of the bands, we can use a foreach loop:
+                        foreach (var band in context.Bands)
+                        {
+                            Console.WriteLine();
+                            Console.WriteLine($"{band.Name}");
+                            Console.WriteLine();
+                        }
+                    }
+
+                    else if (choice == "S")
+                    {
+
+                    }
+                    // code to view albums 
+                    // Console.WriteLine();
+
+                    // var bandsWithAlbums = context.Albums.Include(album => album.Bands);
+
+                    // foreach (var album in bandsWithAlbums)
+                    // {
+                    //     Console.WriteLine($"There is an album named {album.Title} by {album.Bands.Name}");
+                    // }
+
+                    // else if (choice == "S")
+                    // {
+
+                    // }
+
+                }
+
+                //IF Quit 
+                else if (answer == "Q")
+                {
+                    whileRunning = false;
+                    Console.WriteLine("THANKS FOR USING THE SDG MUSIC DATABASE.... GOODBYE :)");
+                }
             }
 
         }
+
     }
 }
+
