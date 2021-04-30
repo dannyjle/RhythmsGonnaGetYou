@@ -124,8 +124,9 @@ namespace RhythmsGonnaGetYou
 
             {
                 // Make a simple menu screen
-                Console.WriteLine();
-                Console.Write("What do you want to do? [V]iew Artists, [A]dd New Music Data, Artist [S]tatus, or [Q]uit ? ");
+                Console.WriteLine(new String('~', 90));
+                Console.WriteLine("What do you want to do? [V]iew Artists, [A]dd New Music Data, Artist [S]tatus, or [Q]uit ? ");
+                Console.WriteLine(new String('~', 90));
                 var answer = Console.ReadLine().ToUpper();
                 Console.WriteLine();
 
@@ -134,8 +135,9 @@ namespace RhythmsGonnaGetYou
                 if (answer == "V")
                 {
 
-                    Console.WriteLine();
-                    Console.Write("What do you want to do? View [A]ll Bands, [S]elect A Band & View Their Album(s), or View by Release [D]ate ? ");
+                    Console.WriteLine(new String('~', 114));
+                    Console.WriteLine("What do you want to do? View [A]ll Bands, [S]elect an Artist & View Their Discography, or View by [R]elease Date ? ");
+                    Console.WriteLine(new String('~', 114));
                     var choice = Console.ReadLine().ToUpper();
                     Console.WriteLine();
 
@@ -156,24 +158,34 @@ namespace RhythmsGonnaGetYou
                         }
                     }
 
-                    else if (choice == "S")
-                    {
-
-                    }
-                    // code to view albums 
-                    // Console.WriteLine();
-
-                    // var bandsWithAlbums = context.Albums.Include(album => album.Bands);
-
-                    // foreach (var album in bandsWithAlbums)
-                    // {
-                    //     Console.WriteLine($"There is an album named {album.Title} by {album.Bands.Name}");
-                    // }
-
                     // else if (choice == "S")
                     // {
+                    //     Console.WriteLine();
+                    //     Console.Write("Which artist did you want to select? ");
+                    //     var selection = Console.ReadLine();
+                    //     Console.WriteLine();
+
+                    //     if (selection == "")
+                    //     {
+
+                    //     }
 
                     // }
+
+                    else if (choice == "R")
+                    {
+                        var ReleaseDate = context.Albums.Include(album => album.Bands).OrderBy(album => album.ReleaseDate);
+
+                        foreach (var album in ReleaseDate)
+                        {
+                            Console.WriteLine();
+                            Console.WriteLine($"The album {album.Title} by {album.Bands.Name}");
+                            Console.WriteLine($"was released on {album.ReleaseDate}");
+                            Console.WriteLine();
+
+                        }
+                    }
+
 
                 }
 
