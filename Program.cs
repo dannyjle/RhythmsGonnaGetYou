@@ -6,7 +6,7 @@ namespace RhythmsGonnaGetYou
     class Bands
     {
 
-        // We will begin by accessing the list of movies from our database from our C# code.
+        // Accessing the list of Bands from our database from our C# code.
 
         public int Id { get; set; }
         public string Name { get; set; }
@@ -20,16 +20,50 @@ namespace RhythmsGonnaGetYou
 
     }
 
+    class Albums
+    {
+
+        // Accessing the list of Albums from our database from our C# code.
+
+        public int Id { get; set; }
+        public string Title { get; set; }
+        public string IsExplicit { get; set; }
+        public DateTime ReleaseDate { get; set; }
+
+        // This tells the Albums model that it can use the Bands property to return a Bands object.
+        public Bands Bands { get; set; }
+
+    }
+
+    class Songs
+    {
+
+        // Accessing the list of Songs from our database from our C# code.
+
+        public int Id { get; set; }
+        public int TrackNumber { get; set; }
+        public string Title { get; set; }
+        public TimeSpan Duration { get; set; }
+        public int AlbumId { get; set; }
+
+        // This tells the Songs model that it can use the Albums property to return a Albums object.
+        public Albums Albums { get; set; }
+
+    }
+
 
     class RhythmsGonnaGetYouContext : DbContext
     {
-        // Define a movies property that is a DbSet.
+        // Define a Bands property that is a DbSet.
         public DbSet<Bands> Bands { get; set; }
+        public DbSet<Albums> Albums { get; set; }
+        public DbSet<Songs> Songs { get; set; }
+
         // Define a method required by EF that will configure our connection
         // to the database.
         //
         // DbContextOptionsBuilder is provided to us. We then tell that object
-        // we want to connect to a postgres database named suncoast_movies on
+        // we want to connect to a postgres database named MusicDatabase on
         // our local machine.
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
