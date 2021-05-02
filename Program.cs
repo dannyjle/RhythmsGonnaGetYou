@@ -159,20 +159,31 @@ namespace RhythmsGonnaGetYou
                     }
 
 
-                    // To select a band and view their albums in database
-                    // else if (choice == "S")
-                    // {
-                    //     Console.WriteLine();
-                    //     Console.Write("Which artist did you want to select? ");
-                    //     var selection = Console.ReadLine();
-                    //     Console.WriteLine();
+                    //  IF SELECT
+                    else if (choice == "S")
+                    {
+                        var name = PromptForString("What artist or band should be selected? ");
+                        var foundBand = context.Bands.FirstOrDefault(band => band.Name == name);
+                        if (foundBand == null)
+                        {
+                            Console.WriteLine();
+                            Console.WriteLine("There is no artist/band by that name in the database!");
+                            Console.WriteLine();
+                        }
+                        else
+                        {
+                            Console.WriteLine();
+                            Console.WriteLine($"These are all the albums by {name} in the database:");
+                            Console.WriteLine();
+                            var albums = context.Albums.Include(album => album.Bands);
 
-                    //     if (selection == "Band.Id")
-                    //     {
-
-                    //     }
-
-                    // }
+                            var albumList = albums.Where(album => album.Bands.Name == name);
+                            foreach (var album in albumList)
+                            {
+                                Console.WriteLine($"{album.Title}");
+                            }
+                        }
+                    }
 
                     // IF VIEW BY RELEASE DATE
                     else if (choice == "R")
