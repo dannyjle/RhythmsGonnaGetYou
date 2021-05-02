@@ -131,7 +131,7 @@ namespace RhythmsGonnaGetYou
                 Console.WriteLine();
 
 
-
+                // IF VIEW
                 if (answer == "V")
                 {
 
@@ -191,6 +191,7 @@ namespace RhythmsGonnaGetYou
 
 
                 }
+
                 // IF ADD
                 else if (answer == "A")
                 {
@@ -218,7 +219,7 @@ namespace RhythmsGonnaGetYou
                         context.SaveChanges();
                     }
 
-
+                    // IF ADD NEW ALBUM
                     else if (choice == "A")
                     {
                         var newAlbum = new Album();
@@ -232,7 +233,7 @@ namespace RhythmsGonnaGetYou
                         context.SaveChanges();
 
                     }
-
+                    // IF ADD NEW SONG
                     else if (choice == "S")
                     {
                         var newSong = new Song();
@@ -245,12 +246,73 @@ namespace RhythmsGonnaGetYou
                         context.Songs.Add(newSong);
                         context.SaveChanges();
                     }
+                }
+
+                //IF STATUS
+                else if (answer == "S")
+                {
+                    Console.WriteLine(new String('~', 62));
+                    Console.WriteLine("Did you want to [V]iew or [U]pdate an Artist's signing status? ");
+                    Console.WriteLine(new String('~', 62));
+                    var choice = Console.ReadLine().ToUpper();
+                    Console.WriteLine();
+
+                    if (choice == "V")
+                    {
+                        Console.WriteLine("The Artists that ARE currently signed are:");
+                        Console.WriteLine();
+                        foreach (var band in context.Bands)
+                        {
+                            if (band.IsSigned == "Yes")
+                                Console.WriteLine(band.Name);
+                        }
+                        Console.WriteLine();
+                        Console.WriteLine();
+
+                        Console.WriteLine("The Artists that are currently NOT signed are:");
+                        Console.WriteLine();
+                        foreach (var band in context.Bands)
+                        {
+                            if (band.IsSigned == "No")
+                                Console.WriteLine(band.Name);
+                        }
+                    }
 
 
+
+                    else if (choice == "U")
+                    {
+                        var name = PromptForString("What is the name of the artist/band you want to update?");
+
+                        var selectedBand = context.Bands.FirstOrDefault(band => band.Name == name);
+                        if (selectedBand == null)
+                        {
+                            Console.WriteLine("Sorry! There are no artist/band by that name in the database!");
+                        }
+                        else
+                        {
+                            var isOrNot = PromptForString($"Do you want to [S]ign or [L]et go of {name}? ").ToUpper();
+                            if (isOrNot == "D")
+                            {
+                                Console.WriteLine($"You let go of *{name}*");
+                                isOrNot = "False";
+                                selectedBand.IsSigned = isOrNot;
+                                context.SaveChanges();
+                            }
+                            else if (isOrNot == "D")
+                            {
+                                Console.WriteLine($"You signed *{name}*");
+                                isOrNot = "True";
+                                selectedBand.IsSigned = isOrNot;
+                                context.SaveChanges();
+                            }
+                        }
+                    }
 
                 }
 
-                //IF Quit 
+
+                //IF QUIT 
                 else if (answer == "Q")
                 {
                     whileRunning = false;
